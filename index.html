@@ -6,17 +6,27 @@
     </head>
     <body>
     <H1>Anything dead yet?</H1>
-    Room temperature: <p id="tempData">--</p><br>
+    Room temperature: <H2 id="tempData">--</H2><br>
     <script type="text/javascript">
         var eSource = new EventSource("stream");
         //detect message receipt
 	    eSource.onmessage = function(event) {
 		    //write the received data to the page
-		    //document.getElementById("serverData").innerHTML = event.data;
-                    if (event.data == '0')
-			    document.getElementById("serverData").innerHTML = '<img src="livemouse.png" alt="not tripped" />';
+		    document.getElementById("serverData").innerHTML = event.data;
+		    var payload = JSON.parse(event.data);
+		    console.log("LOG:" + JSON.parse(event.data));
+		    // Show temperature
+		    document.getElementById("tempData").innerHTML = payload.temp;
+
+		    // Display mouse image
+		    if (payload.state == '0')
+		    {
+		        document.getElementById("serverData").innerHTML = '<img src="livemouse.png" alt="not tripped" />';
+	            }
 		    else
-			    document.getElementById("serverData").innerHTML = '<img src="deadmouse.png" alt="tripped"/>';
+		    {
+		        document.getElementById("serverData").innerHTML = '<img src="deadmouse.png" alt="tripped"/>';
+		    }
 	    };
     </script>
     <div class="box">

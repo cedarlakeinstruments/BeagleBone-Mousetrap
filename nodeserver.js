@@ -16,12 +16,11 @@ http.createServer(function(request, response) {
         response.writeHead(200, {"Content-Type":"text/event-stream", "Cache-Control":"no-cache", "Connection":"keep-alive"});
         response.write("retry: 10000\n");
         response.write("event: connecttime\n");
-        //response.write("data: " + (new Date()) + "\n\n");
-        // response.write("data: " + (new Date()) + "\n\n");
-	response.write("data " + readTrap());
+	response.write(sendData(readTrap(), 56.3));
 
         var interval = setInterval(function() {
-            response.write("data:" + readTrap() + "\n\n");
+            //response.write("data:" + readTrap() + "\n\n");
+	    response.write(sendData(readTrap(), 60.1));
         }, 2000);
         request.connection.addListener("close", function () {
         clearInterval(interval);
@@ -61,12 +60,29 @@ http.createServer(function(request, response) {
 
 console.log("Static file server running at\n  => http://localhost:" + port + "/\nCTRL + C to shutdown");
 
+// Send data stream
+function sendData(state, temp)
+{
+    var values = 'data: {"state":' + state + ',"temp":' + temp +'}\n\n';
+    return values;
+}
+
+
+// Configure IO pins
 function setupIo()
 {
     trap.pinMode("P8_19", trap.INPUT);
 }
 
+// Read mousetrap state
 function readTrap()
 {
    return trap.digitalRead("P8_19");
 }
+
+// Read an LM34 temp sensor and return degF
+function readTemp()
+{
+    return 0.01 * trap.analogRead("P9_36");
+}
+
