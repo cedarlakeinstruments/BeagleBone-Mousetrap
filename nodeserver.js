@@ -5,6 +5,9 @@ var http = require("http"),
     port = process.argv[2] || 8080;
 
 var trap = require("bonescript");
+// Fullscale voltage is 1.8V on analog read
+var FULLSCALE = 1.8;
+
 setupIo();
 
 http.createServer(function(request, response) {
@@ -16,11 +19,11 @@ http.createServer(function(request, response) {
         response.writeHead(200, {"Content-Type":"text/event-stream", "Cache-Control":"no-cache", "Connection":"keep-alive"});
         response.write("retry: 10000\n");
         response.write("event: connecttime\n");
-	response.write(sendData(readTrap(), 56.3));
+	response.write(sendData(readTrap(), readTemp()));
 
         var interval = setInterval(function() {
             //response.write("data:" + readTrap() + "\n\n");
-	    response.write(sendData(readTrap(), 60.1));
+	    response.write(sendData(readTrap(), readTemp().toPrecision(4)));
         }, 2000);
         request.connection.addListener("close", function () {
         clearInterval(interval);
@@ -83,6 +86,12 @@ function readTrap()
 // Read an LM34 temp sensor and return degF
 function readTemp()
 {
-    return 0.01 * trap.analogRead("P9_36");
+   var volts = FULLSCALE * trap.analogRead("P9_36");
+   // Convert to kelvin
+   var k = volts/3300 / 0.000001;
+   // Convert to Fahrenheit
+   var f= (k - 273.15)*9/5+32;
+   console.log("V,k,F: " + volts,k,f);
+   return f;
 }
 

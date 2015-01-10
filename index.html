@@ -21,11 +21,11 @@
 		    // Display mouse image
 		    if (payload.state == '0')
 		    {
-		        document.getElementById("serverData").innerHTML = '<img src="livemouse.png" alt="not tripped" />';
+		        document.getElementById("trapState").innerHTML = '<img src="livemouse.png" alt="not tripped" />';
 	            }
 		    else
 		    {
-		        document.getElementById("serverData").innerHTML = '<img src="deadmouse.png" alt="tripped"/>';
+		        document.getElementById("trapState").innerHTML = '<img src="deadmouse.png" alt="tripped"/>';
 		    }
 	    };
     </script>
@@ -35,6 +35,7 @@
         </div>
 
 	Trap status now<BR>
+	<p id="trapState">--</p>
 	<p id="serverData"></p>
     </div>	  
     </body>
