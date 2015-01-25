@@ -6,7 +6,7 @@
     </head>
     <body>
     <H1>Anything dead yet?</H1>
-    Room temperature: <H2 id="tempData">--</H2><br>
+    Room temperature: <H2 id="tempData">60</H2><br>
     <script type="text/javascript">
         var eSource = new EventSource("stream");
         //detect message receipt
@@ -35,8 +35,18 @@
         </div>
 
 	Trap status now<BR>
-	<p id="trapState">--</p>
-	<p id="serverData"></p>
-    </div>	  
+	<p id="trapState">
+		<img src="livemouse.png"/>
+	</p>
+	<p id="serverData">
+		{"state":0,"temp":60}
+	</p>
+    </div>	
+    <div class="box">
+        <form action="control" method="GET">
+            <button name="status" type="submit" value="on">LED on</button><BR>
+            <button name="status" type="submit" value="off">LED off</button><br><br>
+        </form>
+        <form>    
     </body>
 </html>
